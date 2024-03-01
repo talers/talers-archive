@@ -1,0 +1,38 @@
+{
+	"compilerOptions": {
+		"lib": [
+			"ESNext",
+			"DOM"
+		],
+		"module": "esnext",
+		"target": "esnext",
+		// "composite": true,
+		"declaration": false,
+		"declarationMap": false,
+		"verbatimModuleSyntax": true,
+		"moduleResolution": "bundler",
+		"moduleDetection": "force",
+		"allowImportingTsExtensions": true,
+		"noEmit": true,
+		"strict": true,
+		"downlevelIteration": true,
+		"skipLibCheck": false,
+		"jsx": "react-jsx",
+		"allowSyntheticDefaultImports": true,
+		"forceConsistentCasingInFileNames": true,
+		"allowJs": true,
+		"experimentalDecorators": true,
+		"rootDir": "../..",
+		"types": [
+			"bun-types" // add Bun global
+		],
+		"paths": {}
+	},
+	"include": [
+		"./**/src/*",
+		"./**/*.json",
+	],
+	"exclude": [
+		"./**/node_modules/**",
+	]
+}

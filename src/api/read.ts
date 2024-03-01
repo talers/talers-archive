@@ -1,20 +1,26 @@
 import { stat, exists, readdir } from "node:fs/promises"
 import { parse } from "node:path"
-import { root } from "../root"
-
-const ADMIN_KEY = import.meta.env.ADMIN_KEY ?? "toto"
+import { root } from "../utilities/root"
+import { headers } from "../utilities/headers"
+import { adminKey } from "../utilities/adminKey"
 
 export async function read(request: Request) {
 	const key = request.headers.get("admin-key")
-	if (key !== ADMIN_KEY) {
-		return new Response("Unauthorized.", { status: 401 })
+	if (key !== adminKey) {
+		return new Response("Unauthorized.", {
+			status: 401,
+			headers,
+		})
 	}
 
 	const { pathname } = new URL(request.url)
 	let path = pathname.slice("/read/".length)
 	if (!path) {
 		console.error("No path for request.")
-		return new Response("No path for request.", { status: 400 })
+		return new Response("No path for request.", {
+			status: 400,
+			headers,
+		})
 	}
 
 	const filePath = `${root}/${path}`
@@ -22,7 +28,10 @@ export async function read(request: Request) {
 
 	if (!(await exists(filePath))) {
 		console.error(`File not found: '${path}'.`)
-		return new Response("File not found.", { status: 404 })
+		return new Response("File not found.", {
+			status: 404,
+			headers,
+		})
 	}
 
 	if (stats.isDirectory()) {
@@ -63,11 +72,15 @@ export async function read(request: Request) {
 			{
 				// status: 200,
 				headers: {
+					...headers,
 					"content-type": "text/html; charset=utf-8",
 				},
 			}
 		)
 	} else {
-		return new Response(Bun.file(filePath), { status: 200 })
+		return new Response(Bun.file(filePath), {
+			status: 200,
+			headers,
+		})
 	}
 }

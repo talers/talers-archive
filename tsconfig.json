@@ -31,6 +31,7 @@
 	"include": [
 		"./**/src/*",
 		"./**/*.json",
+		"src/utilities/root.ts",
 	],
 	"exclude": [
 		"./**/node_modules/**",

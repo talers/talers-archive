@@ -1,9 +1,12 @@
 import { headers } from "../utilities/headers"
 import { mkdir } from "node:fs/promises"
 import { root } from "../utilities/root"
+import { cleanOldFiles } from "../utilities/cleanOldFiles"
 
 export async function write(request: Request) {
 	const { body } = request
+
+	console.log("WRITE")
 
 	if (!body) {
 		console.error("No body for request.")
@@ -37,9 +40,12 @@ export async function write(request: Request) {
 
 	await mkdir(`${root}/${path}`, { recursive: true })
 
+	// clean old unused files
+	cleanOldFiles(`${root}/${path}`)
+
 	const filePath = `${root}/${path}/${Date.now()}${type == "text" ? ".txt" : ""}`
-	const file = Bun.file(filePath)
-	const writer = file.writer()
+	let file = Bun.file(filePath)
+	let writer = file.writer()
 	let size = 0
 
 	// stream the body to the file
@@ -48,6 +54,8 @@ export async function write(request: Request) {
 		size += chunk.byteLength
 	}
 	writer.end()
+	;(writer as any) = null
+	;(file as any) = null
 
 	console.log(` • Wrote ${size} bytes to '${filePath}'`)
 	return new Response(`Wrote ${size} bytes to '${path}'.`, {

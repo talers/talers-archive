@@ -1,1 +1,1 @@
-export const adminKey = import.meta.env.ROOT ?? "toto"
+export const adminKey = import.meta.env.ADMIN_KEY ?? "toto"

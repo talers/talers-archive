@@ -29,7 +29,7 @@
 		"paths": {}
 	},
 	"include": [
-		"./**/src/*",
+		"./**/src/**/*",
 		"./**/*.json",
 		"src/utilities/root.ts",
 	],

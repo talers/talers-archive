@@ -4,7 +4,9 @@
 	"private": true,
 	"scripts": {
 		"dev": "ADMIN_KEY='toto' ROOT='data' PORT=3050 bun run --watch src/server.ts",
-		"start": "bun run src/server.ts"
+		"dev:node": "ADMIN_KEY='toto' ROOT='data' PORT=3051 esrun --watch src/server-node.ts",
+		"start": "bun run src/server.ts",
+		"start:node": "esrun src/server-node.ts"
 	},
 	"devDependencies": {
 		"bun-types": "^1.0.29"

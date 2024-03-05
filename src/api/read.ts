@@ -1,4 +1,5 @@
-import { stat, exists, readdir } from "node:fs/promises"
+import { stat, readdir } from "node:fs/promises"
+import { existsSync } from "node:fs"
 import { parse } from "node:path"
 import { root } from "../utilities/root"
 import { headers } from "../utilities/headers"
@@ -26,7 +27,7 @@ export async function read(request: Request) {
 	const filePath = `${root}/${path}`
 	const stats = await stat(filePath)
 
-	if (!(await exists(filePath))) {
+	if (!existsSync(filePath)) {
 		console.error(`File not found: '${path}'.`)
 		return new Response("File not found.", {
 			status: 404,
@@ -40,7 +41,7 @@ export async function read(request: Request) {
 			b = parse(b).name
 			const aIsFile = a == String(Number(a))
 			const bIsFile = b == String(Number(b))
-			if (aIsFile && bIsFile) return Number(a) > Number(b) ? -1 : 1
+			if (aIsFile && bIsFile) return parseInt(a) > parseInt(b) ? -1 : 1
 			if (aIsFile) return -1
 			return 1
 		})
@@ -61,7 +62,7 @@ export async function read(request: Request) {
 								label = Intl.DateTimeFormat(undefined, {
 									dateStyle: "long",
 									timeStyle: "short",
-								}).format(new Date(Number(label)))
+								}).format(new Date(parseInt(label)))
 							}
 							return `<p> &nbsp; • 📄 <a href="/read/${path}/${child}">${label}</a></p>`
 						})

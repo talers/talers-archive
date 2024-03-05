@@ -6,7 +6,7 @@ const port = import.meta.env.PORT ?? 3000
 
 Bun.serve({
 	port,
-	fetch(request, server) {
+	fetch(request) {
 		try {
 			const { pathname } = new URL(request.url)
 

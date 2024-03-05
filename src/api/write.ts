@@ -42,18 +42,28 @@ export async function write(request: Request) {
 	cleanOldFiles(`${root}/${path}`)
 
 	const filePath = `${root}/${path}/${Date.now()}${type == "text" ? ".txt" : ""}`
-	let file = Bun.file(filePath)
-	let writer = file.writer()
 	let size = 0
 
-	// stream the body to the file
-	for await (const chunk of body as unknown as AsyncIterable<Uint8Array>) {
-		writer.write(chunk)
-		size += chunk.byteLength
+	// Method 1: Stream the body to the file with Bun File Sinker
+	// (very fast)
+	{
+		let file = Bun.file(filePath + "-1")
+		let writer = file.writer()
+		// stream the body to the file
+		for await (const chunk of body as unknown as AsyncIterable<Uint8Array>) {
+			writer.write(chunk)
+			size += chunk.byteLength
+		}
+		await writer.end()
 	}
-	writer.end()
-	;(writer as any) = null
-	;(file as any) = null
+
+	// Method 2: Don't stream
+	// (fastest, but no streaming)
+	// {
+	// 	const now = Bun.nanoseconds()
+	// 	Bun.write(filePath + "-2", await request.arrayBuffer())
+	// 	console.log("Time #2: ", Bun.nanoseconds() - now)
+	// }
 
 	console.log(` • Wrote ${size} bytes to '${filePath}'`)
 	return new Response(`Wrote ${size} bytes to '${path}'.`, {

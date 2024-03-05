@@ -10,7 +10,9 @@ export async function cleanOldFiles(directory: string) {
 	const files = readdirSync(directory)
 	if (files.length <= 500) return
 
-	const sortedFiles = files.sort((a, b) => Number(parse(b).name) - Number(parse(a).name))
+	const sortedFiles = files.sort(
+		(a, b) => parseInt(parse(b).name) - parseInt(parse(a).name)
+	)
 	const filesToDelete = sortedFiles.slice(500)
 
 	filesToDelete.forEach(file => unlink(join(directory, file)))

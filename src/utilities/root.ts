@@ -1,1 +1,1 @@
-export const root = import.meta.env.ROOT ?? "/data"
+export const root = globalThis.process?.env?.ROOT ?? import.meta.env?.ROOT ?? "/data"

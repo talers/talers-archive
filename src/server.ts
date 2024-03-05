@@ -8,7 +8,6 @@ Bun.serve({
 	port,
 	fetch(request, server) {
 		try {
-			console.log("ZABU FUICJ")
 			const { pathname } = new URL(request.url)
 
 			if (pathname.startsWith("/read/")) {

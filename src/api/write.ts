@@ -6,8 +6,6 @@ import { cleanOldFiles } from "../utilities/cleanOldFiles"
 export async function write(request: Request) {
 	const { body } = request
 
-	console.log("WRITE")
-
 	if (!body) {
 		console.error("No body for request.")
 		return new Response("No body.", {

@@ -46,38 +46,12 @@ export async function read(request: Request) {
 			return 1
 		})
 
-		return new Response(
-			`
-			<!DOCTYPE html>
-			<html>
-				<head>
-					<title>${path} • Archive</title>
-				</head>
-				<body>
-					<h1>🗂️ ${path}</h1>
-					${children
-						.map(child => {
-							let label = parse(child).name
-							if (label == String(Number(label))) {
-								label = Intl.DateTimeFormat(undefined, {
-									dateStyle: "long",
-									timeStyle: "short",
-								}).format(new Date(parseInt(label)))
-							}
-							return `<p> &nbsp; • 📄 <a href="/read/${path}/${child}">${label}</a></p>`
-						})
-						.join("")}
-				</body>
-			</html>
-		`,
-			{
-				// status: 200,
-				headers: {
-					...headers,
-					"content-type": "text/html; charset=utf-8",
-				},
-			}
-		)
+		return new Response(JSON.stringify(children), {
+			headers: {
+				...headers,
+				"content-type": "application/json",
+			},
+		})
 	} else {
 		return new Response(Bun.file(filePath), {
 			status: 200,

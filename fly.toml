@@ -25,3 +25,5 @@ primary_region = 'cdg'
 [mounts]
   source="talers_archive_data"
   destination="/data"
+  auto_extend_size_threshold = 80
+  auto_extend_size_increment = "20GB"

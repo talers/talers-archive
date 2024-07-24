@@ -25,7 +25,6 @@ export async function read(request: Request) {
 	}
 
 	const filePath = `${root}/${path}`
-	const stats = await stat(filePath)
 
 	if (!existsSync(filePath)) {
 		console.error(`File not found: '${path}'.`)
@@ -34,6 +33,8 @@ export async function read(request: Request) {
 			headers,
 		})
 	}
+
+	const stats = await stat(filePath)
 
 	if (stats.isDirectory()) {
 		const children = (await readdir(filePath)).sort((a, b) => {

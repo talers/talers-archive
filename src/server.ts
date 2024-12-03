@@ -6,14 +6,14 @@ const port = import.meta.env.PORT ?? 3000
 
 Bun.serve({
 	port,
-	fetch(request) {
+	async fetch(request) {
 		try {
 			const { pathname } = new URL(request.url)
 
 			if (pathname.startsWith("/read/")) {
-				return read(request)
+				return await read(request)
 			} else if (pathname.startsWith("/write/")) {
-				return write(request)
+				return await write(request)
 			}
 
 			return new Response("Welcome to Talers archive.")

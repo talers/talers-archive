@@ -27,7 +27,6 @@ export async function read(request: Request) {
 	const filePath = `${root}/${path}`
 
 	if (!existsSync(filePath)) {
-		console.error(`File not found: '${path}'.`)
 		return new Response("File not found.", {
 			status: 404,
 			headers,

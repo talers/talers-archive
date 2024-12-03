@@ -1,13 +1,15 @@
-import { unlink } from "node:fs/promises"
-import { readdirSync } from "node:fs"
+import { unlink, readdir } from "node:fs/promises"
 import { join, parse } from "path"
 
-export async function cleanOldFiles(directory: string) {
-	// randomly skip this function to avoid running it on every request
-	// it's not a big deal if we miss a few files, they will be cleaned up eventually
-	if (Math.random() * 100 > 1) return
+export const cleanOldFilesInterval = 1000 * 60 * 60 * 24 // 1 day
 
-	const files = readdirSync(directory)
+export const cleaningOldFiles = new Set<string>()
+
+export async function cleanOldFiles(directory: string) {
+	if (cleaningOldFiles.has(directory)) return
+	cleaningOldFiles.add(directory)
+
+	const files = await readdir(directory)
 	if (files.length <= 500) return
 
 	const sortedFiles = files.sort(
@@ -15,5 +17,9 @@ export async function cleanOldFiles(directory: string) {
 	)
 	const filesToDelete = sortedFiles.slice(500)
 
-	filesToDelete.forEach(file => unlink(join(directory, file)))
+	await Promise.all(filesToDelete.map(file => unlink(join(directory, file))))
+
+	setTimeout(() => {
+		cleaningOldFiles.delete(directory)
+	}, cleanOldFilesInterval)
 }

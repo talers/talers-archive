@@ -45,19 +45,25 @@ export async function write(request: Request) {
 	let size = 0
 
 	// Stream the body to the file with Bun File Sinker
-	{
-		let file = Bun.file(filePath)
-		let writer = file.writer()
+	let file = Bun.file(filePath)
+	let writer = file.writer()
 
+	try {
 		for await (const chunk of body as unknown as AsyncIterable<Uint8Array>) {
 			writer.write(chunk)
 			size += chunk.byteLength
 		}
-
+	} catch (error) {
 		await writer.end()
+		return new Response(`Error writing file '${path}': ${error}`, {
+			status: 500,
+			headers,
+		})
 	}
 
-	console.log(` • Wrote ${size} bytes to '${filePath}'`)
+	await writer.end()
+
+	// console.log(` • Wrote ${size} bytes to '${filePath}'`)
 	return new Response(`Wrote ${size} bytes to '${path}'.`, {
 		headers,
 	})
